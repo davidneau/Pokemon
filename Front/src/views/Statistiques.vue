@@ -65,7 +65,7 @@ export default ({
           searchstring: "Pikachu",
           numpoke: 149,
           nompoke: "Dracolosse",
-          url: require("/src/assets/images/Pokemon-175px/172.jpg")
+          url: require("/src/assets/images/Pokemon-175px/172.png")
         };
     },
     methods: {

@@ -55,3 +55,37 @@ async def getLogsSD():
         return log
     else:
         print("followerClient actuellement non initié")
+
+@router.get('/getAllPokemons')
+def getAllPokemons(request: Request):
+    request.app.cur.execute(f'SELECT * FROM main."Statistiques" ORDER BY index')
+    resultset = request.app.cur.fetchall()
+    return resultset
+
+
+@router.get('/getAllPokemonsData/{filtre}')
+def getAllPokemonsData(request: Request, filtre):
+    print(f'SELECT * FROM main."pokedex" WHERE "{filtre}"=true ORDER BY numero')
+    request.app.cur.execute(f'SELECT * FROM main."pokedex" WHERE "{filtre}"=true ORDER BY numero')
+    resultset = request.app.cur.fetchall()
+    return resultset
+
+@router.get('/addPoke/{num}/{filtre}')
+def addPoke(request: Request, num, filtre):
+    request.app.cur.execute(f"UPDATE main.pokedex SET \"{filtre}\"=true	WHERE numero={num}")
+    request.app.conn.commit()
+    return "OK"
+
+@router.get('/deletePoke/{num}/{filtre}')
+def deletePoke(request: Request, num, filtre):
+    request.app.cur.execute(f"UPDATE main.pokedex SET \"{filtre}\"=false WHERE numero={num}")
+    request.app.conn.commit()
+    return "OK"
+
+@router.get('/update/')
+def update(request: Request):
+    for i in range(1025):
+        print(i)
+        request.app.cur.execute(f"INSERT INTO main.pokedex(numero, name, \"shinyPoGO\", game, \"shinyHome\", shadow, \"threeStars\", perfect, pure, mega, \"normalPoGO\", \"normalHome\") VALUES ("+str(i+1)+", '???', false, 'PokemonGO', false, false, false, false, false, false, true, true)")
+    request.app.conn.commit()
+    return "OK"
