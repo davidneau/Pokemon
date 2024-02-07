@@ -53,7 +53,8 @@ export default ({
             image_folder: "Shiny",
             filtre: "shiny",
             game: "Home",
-            filtreFinal: ""
+            filtreFinal: "",
+            urlBack: ""
         };
     },
     methods: {
@@ -76,7 +77,7 @@ export default ({
                 event.target.src = require('../assets/images/Shiny/0.png')
                 document.getElementById(pokemon[0]).children[0].children[0].style["background-color"] = "red"
                 this.noPokemon -= 1;
-                axios.get("http://127.0.0.1:8000/deletePoke/" + pokemon[0] + "/" + this.filtreFinal)
+                axios.get(this.urlBack + "deletePoke/" + pokemon[0] + "/" + this.filtreFinal)
                 .then((response) =>{
                     console.log(response)
                 })
@@ -85,7 +86,7 @@ export default ({
                 event.target.src = require(`../assets/images/${this.image_folder}/${pokemon[0]}.png`)
                 document.getElementById(pokemon[0]).children[0].children[0].style["background-color"] = "green"
                 this.noPokemon += 1;
-                axios.get("http://127.0.0.1:8000/addPoke/" + pokemon[0] + "/" + this.filtreFinal)
+                axios.get(this.urlBack + "addPoke/" + pokemon[0] + "/" + this.filtreFinal)
                 .then((response) =>{
                     console.log(response)
                 })
@@ -117,7 +118,7 @@ export default ({
             this.load();
         },
         async init() {
-            await axios.get("http://127.0.0.1:8000/getAllPokemons")
+            await axios.get(this.urlBack + "getAllPokemons")
             .then((response) =>{
                 this.pokemons = response.data
             })
@@ -127,7 +128,7 @@ export default ({
             if ((this.filtre == "shiny") || (this.filtre == "normal")) this.filtreFinal = this.filtre + this.game
             else this.filtreFinal = this.filtre
             console.log("ff : ", this.filtreFinal)
-            await axios.get("http://127.0.0.1:8000/getAllPokemonsData/" + this.filtreFinal)
+            await axios.get(this.urlBack + "getAllPokemonsData/" + this.filtreFinal)
             .then((response) =>{
                 this.pokemonsData = response.data
                 this.pokemonsData.forEach(element => {
@@ -142,6 +143,8 @@ export default ({
         }
     },
     mounted() {
+        this.urlBack = this.$getURLBack();
+        console.log("urlBack :", this.urlBack)
         this.init()
     }
 });
