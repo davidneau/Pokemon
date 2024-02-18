@@ -10,7 +10,7 @@
                 </div>
             </div>
         </div>
-        <div class="Side">
+        <div class="Side" id="Side">
             <div class="filtres" id="filtres">
                 <h2>Filtres</h2>
                 <div>
@@ -32,14 +32,15 @@
                     </select>
                 </div>
             </div>
+            <button @touchstart="filtreMobile">Close</button>
             <div class="infos">
                 <h2>Informations</h2>
                 <p>{{noPokemon}} / 1025</p>
             </div>
         </div>
-        <!-- <button class="mobileFiltre" @click="displayFiltre()">
+        <button class="mobileFiltre" @touchstart="displayFiltre()">
             filtres
-        </button> -->
+        </button>
     </div>
 </template>
 
@@ -61,13 +62,6 @@ export default ({
         };
     },
     methods: {
-        maxChar(chaine, maxLength) {
-            if (chaine.length > maxLength) {
-                return chaine.substring(0, maxLength); // Retourne les premiers maxLength caractères
-            } else {
-                return chaine; // Retourne la chaîne telle quelle si sa longueur est inférieure ou égale à maxLength
-            }
-        },
         colorGen(num){
             num = parseInt(num)
             if (num <= 151) return "#902D8D"
@@ -81,7 +75,8 @@ export default ({
             return "black"
         },
         displayFiltre(){
-            document.getElementById('Side').style.visible='visible'
+            console.log("cc")
+            document.getElementById('Side').style.display='flex'
         },
         change(pokemon, event){
             console.log(event.target.src)
@@ -104,6 +99,20 @@ export default ({
                     console.log(response)
                 })
             }
+        },
+        filtreMobile(){
+            let i = 1;
+            while (i<=1024){
+                document.getElementById(i).children[0].children[0].style["background-color"] = "red"
+                document.getElementById(i).children[0].children[0].children[0].src = require(`../assets/images/${this.image_folder}/0.png`)
+                i+=1;
+            }
+            this.noPokemon = 0
+            console.log(this.filtre)
+            if (this.filtre == "shiny") this.image_folder = "Shiny"
+            else this.image_folder = "Pokemon-175px"
+            this.load()  
+            document.getElementById("Side").style.display = "none"  
         },
         onChangeGame(event){
             let i = 1;
@@ -239,14 +248,17 @@ html {
     height: 100%;
 }
 
+
+.mobileFiltre{
+    visibility: hidden;
+}
+
 @media only screen and (max-width: 600px) {
     .main{
         display: block;
     }
 
     .infos{
-        visibility: hidden;
-        position: absolute;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -259,8 +271,6 @@ html {
     }
 
     .filtres{
-        position: absolute;
-        visibility: hidden;
         flex-direction: column;
         align-items: center;
         justify-content: space-around;
@@ -270,6 +280,19 @@ html {
         width: 200px;
     }
 
+    
+    .mobileFiltre{
+        visibility: visible;
+        height: 50px;
+        position: absolute;
+        top: 100px;
+        right: 50px;
+        background: black;
+        color: white;
+        border-radius: 10px;
+        padding: 5px;
+    }
+
     #Pokedex {
         background-color: black;
         width: 100%;
@@ -277,6 +300,19 @@ html {
         display: flex;
         flex-wrap: wrap;
         overflow: auto;
+    }
+
+    .Side{
+        display: none;
+        height: 80vh;
+        width: 60%;
+        margin-left: 20%;
+        position: absolute;
+        top: 100px;
+        background-color: white;
+        border: 1px black solid;
+        border-radius: 15px;
+        z-index: 10002;
     }
 
     .card {
