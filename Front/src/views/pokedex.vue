@@ -5,7 +5,7 @@
                 <div>
                     <div class="entry" style="text-align: center">
                         <img class="imagePoke" :src="require(`../assets/images/${image_folder}/0.png`)">
-                        <p>{{ pokemon[0] }} <!-- - {{ pokemon[1] }} --></p>
+                        <p>{{ pokemon[0] }} - {{ pokemon[1] }}</p>
                     </div>
                 </div>
             </div>
@@ -61,6 +61,13 @@ export default ({
         };
     },
     methods: {
+        maxChar(chaine, maxLength) {
+            if (chaine.length > maxLength) {
+                return chaine.substring(0, maxLength); // Retourne les premiers maxLength caractères
+            } else {
+                return chaine; // Retourne la chaîne telle quelle si sa longueur est inférieure ou égale à maxLength
+            }
+        },
         colorGen(num){
             num = parseInt(num)
             if (num <= 151) return "#902D8D"
@@ -286,7 +293,7 @@ html {
         margin-bottom: 0px;
         color: white;
         border-radius: 10px;
-        font-size: 14px;
+        font-size: 10px;
     }
 
     .imagePoke{
