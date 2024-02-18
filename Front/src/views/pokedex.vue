@@ -5,13 +5,13 @@
                 <div>
                     <div class="entry" style="text-align: center">
                         <img class="imagePoke" :src="require(`../assets/images/${image_folder}/0.png`)">
-                        <p>{{ pokemon[0] }} - {{ pokemon[1] }}</p>
+                        <p>{{ pokemon[0] }} <!-- - {{ pokemon[1] }} --></p>
                     </div>
                 </div>
             </div>
         </div>
         <div class="Side">
-            <div class="filtres">
+            <div class="filtres" id="filtres">
                 <h2>Filtres</h2>
                 <div>
                     <h3>Jeu</h3>
@@ -37,6 +37,9 @@
                 <p>{{noPokemon}} / 1025</p>
             </div>
         </div>
+        <!-- <button class="mobileFiltre" @click="displayFiltre()">
+            filtres
+        </button> -->
     </div>
 </template>
 
@@ -69,6 +72,9 @@ export default ({
             if (num <= 809) return "#FFEF2E"
             if (num <= 905) return "#F7922B"
             return "black"
+        },
+        displayFiltre(){
+            document.getElementById('Side').style.visible='visible'
         },
         change(pokemon, event){
             console.log(event.target.src)
@@ -156,9 +162,9 @@ html {
 }
 
 .main{
-    display:flex; 
+    display:flex;
     flex-direction: row;
-    justify-content: space-around; 
+    justify-content: space-around;
     align-items: center
 }
 #Pokedex {
@@ -215,7 +221,7 @@ html {
     background-color: white;
     width: 100%;
     padding-left: 5px;
-	appearance: default;
+        appearance: default;
 }
 
 .Side{
@@ -227,6 +233,9 @@ html {
 }
 
 @media only screen and (max-width: 600px) {
+    .main{
+        display: block;
+    }
 
     .infos{
         visibility: hidden;
@@ -262,7 +271,7 @@ html {
         flex-wrap: wrap;
         overflow: auto;
     }
-    
+
     .card {
         width: 20%;
         padding: 5px;
@@ -285,6 +294,4 @@ html {
         width: 80%;
     }
 }
-
 </style>
-    

@@ -1,6 +1,5 @@
 <template>
   <span>
-    
   </span>
 </template>
 
