@@ -87,7 +87,7 @@ export default ({
       },
       search(){
         console.log(this.numpoke)
-        axios.get(this.urlBack + "/pokemon/" + this.searchstring)
+        axios.get(this.urlBack + "pokemon/" + this.searchstring)
         .then((response) => {
           console.log(response)
           this.numpoke = response.data[0]
