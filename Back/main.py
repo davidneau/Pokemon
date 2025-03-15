@@ -8,7 +8,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = ["http://localhost:8081", "http://127.0.0.1:8081"],
+    allow_origins = ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -16,8 +16,8 @@ app.add_middleware(
 
 @app.on_event("startup")
 def start_up_db(): 
-    conn = psycopg2.connect("host='localhost' dbname='pokemon' user='postgres' password='Dragon-49'")
+    conn = psycopg2.connect("host='localhost' dbname='Pokemon' user='postgres' password='Dragon-49'")
     app.conn = conn
     app.cur = conn.cursor()
 
-app.include_router(router)
+app.include_router(router) 

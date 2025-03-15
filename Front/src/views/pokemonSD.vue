@@ -416,7 +416,7 @@
     background-color: black;
 }
 
-.statistiques{
+.statistiquesSD{
   display: flex;
   flex-direction: column;
   justify-content: space-between;

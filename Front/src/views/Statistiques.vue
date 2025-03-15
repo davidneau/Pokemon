@@ -2,10 +2,12 @@
   <div class="about">
     <div class="stats">
       <div class="search">
-        <v-btn @click="previous"><v-icon>mdi-previous</v-icon></v-btn>
-        <input type="text" v-model='searchstring' class="textsearch">
-        <v-btn @click="search">Search</v-btn>
-        <v-btn @click="next"><v-icon>mdi-next</v-icon></v-btn>
+        <v-btn @click="previous"><v-icon>mdi-arrow-left</v-icon></v-btn>
+        <div>
+          <input type="text" v-model='searchstring' class="textsearch">
+          <v-btn @click="search">Search</v-btn>
+        </div>
+        <v-btn @click="next"><v-icon>mdi-arrow-right</v-icon></v-btn>
       </div>
       <div class="pokeInfo">
         <div class="num">
@@ -83,10 +85,11 @@ export default ({
         }
       },
       search(){
+        console.log(this.numpoke)
         axios.get("http://127.0.0.1:8000/pokemon/" + this.searchstring)
         .then((response) => {
           console.log(response)
-          this.numpoke = response.data[0] + 1
+          this.numpoke = response.data[0]
           this.nompoke = response.data[1]
           this.pv = response.data[4]
           this.att = response.data[5]
@@ -100,6 +103,7 @@ export default ({
       },
       previous(){
         this.numpoke -= 1
+        console.log("previous", this.numpoke)
         this.searchstring = this.numpoke
         this.search()
       },
@@ -129,11 +133,12 @@ export default ({
 
 .stats{
   background-color: #EEEEEE;
-  height: 90%;
-  width: 40%;
+  height: 50%;
+  width: 25%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-radius: 15px;
 }
 
 .pokeInfo {
@@ -143,15 +148,20 @@ export default ({
 }
 
 .num {
-  border: 2px solid black;
+  margin-right: 2px;
+  font-weight: bold;
 }
 
 .nom {
-  border: 2px solid black;
+  margin-left: 2px;
 }
 
 .image{
   width: 175px;
+  border: 1px solid black;
+  border-radius: 15px;
+  margin: 20px 0;
+  background-color: white;
 }
 
 .statistiques{
@@ -220,7 +230,7 @@ export default ({
 
 .search {
   margin-top: 10px;
-  width: 45%;
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;

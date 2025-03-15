@@ -1,14 +1,15 @@
 from fastapi import APIRouter, Request
-from sd import FollowerClient
+""" from sd import FollowerClient """
 from threading import Thread
 import time
+
 router = APIRouter()
 
 @router.get('/pokemon/{nameorid}')
 def getStats(request: Request, nameorid):
     try:
         key = int(nameorid)
-        request.app.cur.execute(f'SELECT * FROM main."Statistiques" where index={key-1}')
+        request.app.cur.execute(f'SELECT * FROM main."Statistiques" where index={key}')
     except:
         key = nameorid
         print(f'SELECT * FROM main."Statistiques" where "Nom anglais"=\'{key}\'')
