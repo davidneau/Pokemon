@@ -3,7 +3,6 @@ import CalendarHome from '../views/Home.vue'
 import StatistiquesPokemon from '../views/Statistiques.vue'
 import PokemonSD from '../views/pokemonSD.vue'
 import Pokedex from '../views/pokedex.vue'
-import Music from '@/views/Music.vue'
 
 const routes = [
   {
@@ -25,11 +24,6 @@ const routes = [
     path: '/pokedex',
     name: 'pokedex',
     component: Pokedex
-  },
-  {
-    path: '/music',
-    name: 'Music',
-    component: Music
   }
 ]
 
