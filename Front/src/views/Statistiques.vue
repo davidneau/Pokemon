@@ -67,7 +67,8 @@ export default ({
           searchstring: "Pikachu",
           numpoke: 149,
           nompoke: "Dracolosse",
-          url: require("/src/assets/images/Pokemon-175px/172.png")
+          url: require("/src/assets/images/Pokemon-175px/172.png"),
+          urlBack: "",
         };
     },
     methods: {
@@ -86,7 +87,7 @@ export default ({
       },
       search(){
         console.log(this.numpoke)
-        axios.get("http://127.0.0.1:8000/pokemon/" + this.searchstring)
+        axios.get(this.urlBack + "/pokemon/" + this.searchstring)
         .then((response) => {
           console.log(response)
           this.numpoke = response.data[0]
@@ -115,7 +116,9 @@ export default ({
       }
     },
     mounted() {
-      this.search()
+        this.urlBack = this.$getURLBack();
+        console.log("urlBack :", this.urlBack)
+        this.search()
     }
 });
 </script>
