@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="mainSD">
     <div class="upside">
       <div class="teamUp">
         <div class="banc"><v-img style="width:100%;" :src="tupsrc.tup1"></v-img><p></p></div>
@@ -28,36 +28,36 @@
             </div>
             <p>Objet : {{ item.p1a }}</p>
           </div>
-          <div class="statistiques">
+          <div class="statistiquesSD">
             <div class="labels-stats">
               <label>HP</label>
               <label>{{ pv.p1a }}</label>
-              <div></div>
+              <div id="p1apv" class="animstarts"></div>
             </div>
             <div class="labels-stats">
               <label>Att</label>
               <label>{{ att.p1a }}</label>
-              <div></div>
+              <div id="p1aatt" class="animstarts"></div>
             </div>
             <div class="labels-stats">
               <label>Def</label>
               <label>{{ def.p1a }}</label>
-              <div></div>
+              <div id="p1adef" class="animstarts"></div>
             </div>
             <div class="labels-stats">
               <label>SpeA</label>
               <label>{{ attspe.p1a }}</label>
-              <div></div>
+              <div id="p1aattspe" class="animstarts"></div>
             </div>
             <div class="labels-stats">
               <label>SpeD</label>
               <label>{{ defspe.p1a }}</label>
-              <div></div>
+              <div id="p1adefspe" class="animstarts"></div>
             </div>
             <div class="labels-stats">
               <label>Spd</label>
               <label>{{ vitesse.p1a }}</label>
-              <div></div>
+              <div id="p1avitesse" class="animstarts"></div>
             </div>
           </div>
         </div>
@@ -83,36 +83,36 @@
             </div>
             <p>Objet : {{ item.p2a }}</p>
           </div>
-          <div class="statistiques">
+          <div class="statistiquesSD">
             <div class="labels-stats">
               <label>HP</label>
               <label>{{ pv.p2a }}</label>
-              <div></div>
+              <div id="p2apv" class="animstarts"></div>
             </div>
             <div class="labels-stats">
               <label>Att</label>
               <label>{{ att.p2a }}</label>
-              <div></div>
+              <div id="p2aatt" class="animstarts"></div>
             </div>
             <div class="labels-stats">
               <label>Def</label>
               <label>{{ def.p2a }}</label>
-              <div></div>
+              <div id="p2adef" class="animstarts"></div>
             </div>
             <div class="labels-stats">
               <label>SpeA</label>
               <label>{{ attspe.p2a }}</label>
-              <div></div>
+              <div id="p2aattspe" class="animstarts"></div>
             </div>
             <div class="labels-stats">
               <label>SpeD</label>
               <label>{{ defspe.p2a }}</label>
-              <div></div>
+              <div id="p2adefspe" class="animstarts"></div>
             </div>
             <div class="labels-stats">
               <label>Spd</label>
               <label>{{ vitesse.p2a }}</label>
-              <div></div>
+              <div id="p2avitesse" class="animstarts"></div>
             </div>
           </div>
         </div>
@@ -125,14 +125,13 @@
         <div class="banc"><v-img style="width:100%;" :src="tdwnsrc.tdwn5"></v-img><p></p></div>
         <div class="banc"><v-img style="width:100%;" :src="tdwnsrc.tdwn6"></v-img><p></p></div>
       </div>
-
     </div>
   </div>
 </template>
   
   <script>
   import axios from "axios"
-  import { toRaw } from 'vue'
+  /* import { toRaw } from 'vue' */
   
   export default ({
     name: "StatistiquesPokemon",
@@ -148,6 +147,7 @@
           team1: {},
           team2: {},
           urlBack: "",
+          currentBattleID: "",
           tupsrc: {
             "tup1": "",
             "tup2": "",
@@ -167,241 +167,151 @@
           url: {"p1a": require("../assets/images/Pokemon-175px/0.png"), "p2a": require("../assets/images/Pokemon-175px/0.png")},
           urltype1: {"p1a": require("../assets/images/Type/Anglais/dark.png"), "p2a": require("../assets/images/Type/Anglais/fire.png")},
           urltype2: {"p1a": require("../assets/images/Type/Anglais/flying.png"), "p2a": require("../assets/images/Type/Anglais/ghost.png")},
-          type2show: {"p1a": false, "p2a": false},
+          type2show: {"p1a": true, "p2a": true},
           nompoke: {"p1a": "Nom Pokémon", "p2a": "Nom Pokémon"},
           firstpoke: {"p1a": "???", "p2a": "???"},
           numpoke: {"p1a": "n° ???", "p2a": "n° ???"},
           hp: {"p1a": "100%", "p2a": "100%"},
           item: {"p1a": "???", "p2a": "???"},
-          pokemonDataReady: false
+          pokemonDataReady: false,
+          battleOn: false
         };
     },
     methods: {
+      delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      },
       init(){
-          axios.get("http://127.0.0.1:8000/initSDSession")
-          .then(() => {
-              this.updateSDSession()
-          })
-      },
-      fillbunch(){
-        const target_1 = toRaw(this.team1);
-        Object.keys(target_1).forEach(((element, index) => {
-          if (target_1[element].length !== 0) {
-            try {
-              console.log("Chargement de l'image pour : ", element["NomAnglais"])
-              let id = "tup" + (index + 1)
-              console.log(id)
-              this.tupsrc[id] = require('../assets/images/Pokemon-175px/' + target_1[element]["index"] + '.jpg')
-              document.getElementsByClassName('banc')[index].childNodes[1].innerText = target_1[element]["NomAnglais"]
-            }
-            catch (error){
-              console.log(error)
+        let thisParent = this
+
+        // URL du serveur WebSocket
+        const URI = "wss://sim3.psim.us/showdown/websocket";
+
+        // Création de la connexion WebSocket
+        const ws = new WebSocket(URI);
+
+        ws.onopen = async function () {
+          console.log("✅ Connecté au serveur Showdown");
+          let cond = 1
+          while (cond == 1){
+            await thisParent.delay(1000);
+            if(!thisParent.battleOn) {
+              console.log('search battle');
+              setTimeout(ws.send("|/cmd userdetails Mahotsuki"), 1000);
             }
           }
-        }))
-        const target_2 = toRaw(this.team2);
-        console.log(target_2)
-        Object.keys(target_2).forEach(((element, index) => {
-          if (target_2[element].length !== 0) {
-            try {
-              console.log("Chargement de l'image pour : ", element["NomAnglais"])
-              let id = "tdwn" + (index + 1)
-              this.tdwnsrc[id] = require('../assets/images/Pokemon-175px/' + target_2[element]["index"] + '.jpg')
-              document.getElementsByClassName('banc')[6 + index].childNodes[1].innerText = target_2[element]["NomAnglais"]
-            }
-            catch (error){
-              console.log(error)
+        };
+
+        ws.onmessage = async function (event) {
+          let message = event.data;
+          // Chercher un ID de combat dans les messages
+          let battleMatch = message.match(/battle-[a-z0-9-]+/);
+          console.log(`🔹 ${event.data}`)
+
+          console.log(message.includes("☆battle"))
+          console.log(thisParent.battleOn)
+
+          if (message.includes("☆battle") && !thisParent.battleOn) {
+            console.log("attempt to join ", battleMatch[0])
+            ws.send(`|/join ${battleMatch[0]}`);
+            console.log(`📡 Suivi du combat ${thisParent.currentBattleID}...`);
+            thisParent.battleOn = true;
+          }
+
+          if (message.includes("win") || message.includes("forfeited")){
+            console.log("stop battle");
+            await thisParent.delay(1000)
+            thisParent.battleOn = false;
+          }
+
+          if (event.data.includes("switch")) {
+            let message = event.data
+            console.log(message.split("|").indexOf("switch"))
+            let indexSwitch = message.split("|").indexOf("switch")
+            let namePokeSwitched = message.split("|")[indexSwitch + 2].split(",")[0].trim()
+            let player = message.split("|")[indexSwitch + 1].split(":")[0]
+            thisParent.switch(namePokeSwitched, player, thisParent)
+
+            if (message.split("|").indexOf("switch", indexSwitch + 1)){
+              console.log(message.split("|").indexOf("switch", indexSwitch + 1))
+              let indexSwitch2 = message.split("|").indexOf("switch", indexSwitch + 1)
+              let namePokeSwitched2 = message.split("|")[indexSwitch2 + 2].split(",")[0].trim()
+              let player2 = message.split("|")[indexSwitch2 + 1].split(":")[0]
+              await thisParent.delay(500)
+              thisParent.switch(namePokeSwitched2, player2, thisParent)
             }
           }
-        }))
+        };
+
+        ws.onerror = function (error) {
+            console.error("❌ Erreur WebSocket :", error);
+        };
+
+        ws.onclose = function () {
+            console.log("🚪 Connexion fermée.");
+        };
       },
-      async getDataPokemon(){
-        console.log("requete pour avoir les donnée des pokemons avec :")
-        console.log(this.team1)
-        console.log(this.team2)
-        let list_pokemon = Array()
-        Object.entries(this.team1).forEach(([key]) => {
-          list_pokemon.push(key)
-        });
-        Object.entries(this.team2).forEach(([key]) => {
-          list_pokemon.push(key)
-        });
-        console.log("http://127.0.0.1:8000/pokemonTeam/" + list_pokemon.join('_'))
-        await axios.get("http://127.0.0.1:8000/pokemonTeam/" + list_pokemon.join('_'))
+      addAnimation(cat, player, stat){
+        let id = player + cat
+        document.getElementById(id).style.setProperty('--arrive', stat + "px")
+        document.getElementById(id).style.animation = 'none'
+        document.getElementById(id).offsetWidth;
+        document.getElementById(id).style.animation = null
+      },
+      switch(pokemon, player, thisParent){
+        console.log(player, "switch on", pokemon)
+        axios.get(thisParent.urlBack + "pokemon/" + pokemon)
         .then((response) => {
-          console.log(response.data)
-          response.data.forEach((element, index) =>{
-            let team = this.team1
-            if (index >= 6) {team = this.team2}
-            if (element !== null) {
-              let pokemon = element[12].toLowerCase()
-              team[pokemon]["index"] = element[0]
-              team[pokemon]["Nom"] = element[1]
-              team[pokemon]["Type1"] = element[2]
-              team[pokemon]["Type2"] = element[3]
-              team[pokemon]["PV"] = element[4]
-              team[pokemon]["Att"] = element[5]
-              team[pokemon]["AttSpe"] = element[6]
-              team[pokemon]["Def"] = element[7]
-              team[pokemon]["DefSpe"] = element[8]
-              team[pokemon]["Vit"] = element[9]
-              team[pokemon]["Talent1"] = element[10]
-              team[pokemon]["Talent2"] = element[11]
-              team[pokemon]["TalentCache"] = element[13]
-              team[pokemon]["NomAnglais"] = element[12]
-              team[pokemon]["Numero"] = element[14]
-              team[pokemon]["HPremain"] = "100%"
-              team[pokemon]["Statut"] = "OK"
-              team[pokemon]["Item"] = "Unknown"
-            }
-          })
-          this.fillbunch()
-          this.fillPokemonActiv("p1a", this.firstpoke["p1a"])
-          this.fillPokemonActiv("p2a", this.firstpoke["p2a"])
-          this.pokemonDataReady = true
+          console.log(response)
+          console.log("numpoke", thisParent.numPoke)
+          thisParent.numpoke[player] = response.data[0]
+          thisParent.nompoke[player] = response.data[1]
+          thisParent.url[player] = require("../assets/images/Pokemon-175px/" + response.data[0] + ".png")
+          thisParent.urltype1[player] = require("../assets/images/Type/Anglais/" + response.data[2] + ".png")
+          if (response.data[3] !== "none") {
+            thisParent.urltype2[player] = require("../assets/images/Type/Anglais/" + response.data[3] + ".png")
+            document.getElementById("type2p2a").style.display = "block"
+          }  
+          else document.getElementById("type2p2a").style.display = "none"
+          thisParent.pv[player] = response.data[4]
+          thisParent.att[player] = response.data[5]
+          thisParent.attspe[player] = response.data[6]
+          thisParent.def[player] = response.data[7]
+          thisParent.defspe[player] = response.data[8]
+          thisParent.vitesse[player] = response.data[9]
+          let index = 4
+          let cats = ["pv", "att", "attspe", "def", "defspe", "vitesse"]
+          cats.forEach(element => {
+            thisParent.addAnimation(element, player, response.data[index])
+            index += 1
+          });
         })
       },
-      fillPokemonActiv(player, pokemonChosen){
-        let pokemon
-        if (player == "p1a") {pokemon = toRaw(this.team1)[pokemonChosen.toLowerCase()]}
-        if (player == "p2a") {pokemon = toRaw(this.team2)[pokemonChosen.toLowerCase()]}
-        console.log("pokemon actif : ", pokemonChosen)
-        let numplayer = parseInt(player.charAt(1)) - 1
-        this.numpoke[player] = "n°" + pokemon["Numero"]
-        this.nompoke[player] = pokemon["NomAnglais"]
-        this.urltype1[player] = require("../assets/images/Type/Anglais/" + pokemon["Type1"] +  ".png")
-        if (pokemon["Type2"] != "none"){
-          this.type2show[player] = true;
-          this.urltype2[player] = require("../assets/images/Type/Anglais/" + pokemon["Type2"] +  ".png")
-          }
-        else {this.type2show[player] = false}
-        let hp = pokemon["HPremain"]
-        console.log(pokemon)
-        if (player == "p1a"){
-          document.getElementById("hp1").style.width = hp
-          this.hp[player] = hp
-        }
-        if (player == "p2a"){
-          document.getElementById("hp2").style.width = hp
-          this.hp[player] = hp
-        }
-        this.pv[player] = pokemon["PV"]
-        this.att[player] = pokemon["Att"]
-        this.attspe[player] = pokemon["AttSpe"]
-        this.def[player] = pokemon["Def"]
-        this.defspe[player] = pokemon["DefSpe"]
-        this.vitesse[player] = pokemon["Vit"]
-        this.url[player] = require("../assets/images/Pokemon-175px/" + pokemon["index"] + ".jpg") 
-        let backstats = [this.pv[player], this.att[player], this.def[player], this.attspe[player], this.defspe[player], this.vitesse[player]]
-        let count = 0
-        let statdivs = document.getElementsByClassName("statistiques")[numplayer]
-        for (let sdiv of statdivs.childNodes){
-            sdiv = sdiv.childNodes[2]
-            sdiv.style = ""
-            sdiv.style.width = backstats[count] + "px"
-            if (backstats[count] < 80) {sdiv.style.backgroundColor = "red"}
-            else if(backstats[count] < 110) {sdiv.style.backgroundColor = "yellow"}
-            else {{sdiv.style.backgroundColor = "green"}}
-            sdiv.style.animation = 'none'
-            sdiv.offsetWidth;
-            sdiv.style.animation = null
-            count += 1
+      async getUserBattles(username) {
+        let url = `https://pokemonshowdown.com/users/${username}.json`;
+
+        try {
+            let response = await fetch(url);
+            let data = await response.json();
+
+            console.log("🔍 Combats en cours :", data.rooms);
+        } catch (error) {
+            console.error("❌ Erreur :", error);
         }
       },
-      damage(player, damage, item){
-        console.log(this.nompoke)
-        if (item !== "" && item.split(" ")[1] == "item:"){
-          item = item.split(":")[1].substring(1); 
-          console.log("item :", item)
-        }
-        this.item[player] = item
-        let hpremain = parseInt(damage.split("/")[0]) / parseInt(damage.split("/")[1])
-        this.hp[player] = Math.round(hpremain * 100) + "%"
-        console.log(damage.includes("fnt"))
-        if (player == "p1a") {
-          if (damage.includes("fnt")){
-            this.hp[player] = "KO"
-            document.getElementById("hp1").style.width = 0
-            this.team1[this.nompoke["p1a"].toLocaleLowerCase()]["HPremain"] = "KO"
-          }
-          else {
-            document.getElementById("hp1").style.width = Math.round(hpremain * 100) + "%";
-            this.team1[this.nompoke["p1a"].toLocaleLowerCase()]["HPremain"] = Math.round(hpremain * 100) + "%"
-          }
-          console.log(this.team1)
-        }
-        if (player == "p2a") {
-          console.log(this.nompoke["p2a"].toLowerCase())
-          if (damage.includes("fnt")){
-            this.hp[player] = "KO"
-            document.getElementById("hp2").style.width = 0
-            this.team2[this.nompoke["p2a"].toLocaleLowerCase()]["HPremain"] = "KO"
-          }
-          else {
-            document.getElementById("hp2").style.width = Math.round(hpremain * 100) + "%"
-            this.team2[this.nompoke["p2a"].toLocaleLowerCase()]["HPremain"] = Math.round(hpremain * 100) + "%"
-          }
-          console.log(this.team2)
-        }
+      fillbunch(){
       },
-      itemInfo(data){
-        let jsonData = JSON.parse(data[0])
-        console.log("item info : ", jsonData)
+      async getDataPokemon(){
       },
-      dispatch(inp_type, data){
-        if (inp_type == "poke"){
-          let pokemon = data[1].split(",")[0]
-          let player = data[0]
-          if (player == "p1"){this.team1[pokemon.toLowerCase()] = {}}
-          if (player == "p2"){this.team2[pokemon.toLowerCase()] = {}}
-          if (Object.keys(toRaw(this.team1)).length == 6 && Object.keys(toRaw(this.team2)).length == 6){
-            console.log(Object.keys(toRaw(this.team1)).length)
-            console.log(Object.keys(toRaw(this.team1)).length)
-            console.log("GetDataPokemon")
-            this.getDataPokemon()
-          }
-        }
-        if (inp_type == "-damage" || inp_type == "-heal"){
-          let player = data[0].split(":")[0]
-          let damage = data[1]
-          let item = ""
-          console.log(data)
-          if (data.length == 3){item = data[2]; console.log(item)}
-          this.damage(player, damage, item)
-        }
-        if (inp_type == "switch"){
-          let pokemon = data[1].split(",")[0]
-          let player = data[0].split(":")[0]
-          if (!this.pokemonDataReady){this.firstpoke[player] = pokemon}
-          else {
-            console.log(player + " switch avec " + pokemon)
-            this.fillPokemonActiv(player, pokemon)
-          }
-        }
-/*           if (inp_type == "request"){
-          this.itemInfo(data)
-        } */
-        if (inp_type == "win"){
-          this.team1 = {}
-          this.team2 = {}
-          console.log("match terminée, réinitialisation des teams ")
-        }
+      fillPokemonActiv(){
+      },
+      damage(){
+      },
+      itemInfo(){
+      },
+      dispatch(){
       },
       async updateSDSession(){
-        let a = 1
-        const timeout = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-        while (a == 1) {
-            axios.get("http://127.0.0.1:8000/getLogsSD")
-                .then((response) => {
-                  if (response.data.length !== 0) {console.log(response.data)}
-                  for (let i=0; i<response.data.length; i++){
-                    let inp_type = response.data[i][0]
-                    let data = response.data[i][1]
-                    this.dispatch(inp_type, data)
-                  }
-                })
-            await timeout(3000)
-        }
       }
     },
     mounted() {
@@ -425,6 +335,7 @@
   justify-content: space-between;
   height: 60%;
   margin-left: 10px;
+  width: 50%;
 }
 
 .upside{
@@ -583,8 +494,24 @@
 
 .v-responsive__sizer { padding-bottom: 0% !important}
 
-.main{
+.mainSD{
   height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.animstarts{
+  animation: grow_stats 1s both;
+  animation-fill-mode: forwards
+}
+
+@keyframes grow_stats {
+  from {
+    width: 0px;
+  }
+  to {
+    width: var(--arrive);
+  }
 }
 </style>
   
