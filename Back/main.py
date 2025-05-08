@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from routes import router
 import psycopg2
+import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
@@ -24,3 +25,7 @@ def start_up_db():
     app.cur = conn.cursor()
 
 app.include_router(router) 
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))  # fallback en local
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
