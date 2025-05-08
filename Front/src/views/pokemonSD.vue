@@ -2,12 +2,12 @@
   <div class="mainSD">
     <div class="upside">
       <div class="teamUp">
-        <div class="banc"><v-img style="width:100%;" :src="tupsrc.tup1"></v-img><p></p></div>
-        <div class="banc"><v-img style="width:100%;" :src="tupsrc.tup2"></v-img><p></p></div>
-        <div class="banc"><v-img style="width:100%;" :src="tupsrc.tup3"></v-img><p></p></div>
-        <div class="banc"><v-img style="width:100%;" :src="tupsrc.tup4"></v-img><p></p></div>
-        <div class="banc"><v-img style="width:100%;" :src="tupsrc.tup5"></v-img><p></p></div>
-        <div class="banc"><v-img style="width:100%;" :src="tupsrc.tup6"></v-img><p></p></div>
+        <div class="banc"><v-img style="width:100%;" id="bu1" :src="bench.p1a.b1"></v-img><p></p></div>
+        <div class="banc"><v-img style="width:100%;" id="bu2" :src="bench.p1a.b2"></v-img><p></p></div>
+        <div class="banc"><v-img style="width:100%;" id="bu3" :src="bench.p1a.b3"></v-img><p></p></div>
+        <div class="banc"><v-img style="width:100%;" id="bu4" :src="bench.p1a.b4"></v-img><p></p></div>
+        <div class="banc"><v-img style="width:100%;" id="bu5" :src="bench.p1a.b5"></v-img><p></p></div>
+        <div class="banc"><v-img style="width:100%;" id="bu6" :src="bench.p1a.b6"></v-img><p></p></div>
       </div>
       
       <div class="info_up">
@@ -19,14 +19,17 @@
             </div>
             <v-img class="image" id="image" max-height="50%" max-width="80%" :src=url.p1a></v-img>
             <div class="containerHP">
-              <p>{{ hp.p1a }}</p>
-              <div><div id="hp1"></div></div>
+              <p>{{ hp.p1a }}%</p>
+              <div><div id="hp1" :style="`width: ${hp.p1a}%`"></div></div>
             </div>
             <div class="type">
               <v-img :src="urltype1.p1a" max-width="40%" height="100%" ></v-img>
               <v-img id="type2p1a" :src="urltype2.p1a" max-width="40%" height="100%" v-if="type2show.p1a"></v-img>
             </div>
-            <p>Objet : {{ item.p1a }}</p>
+            <div>
+              <p>Status : {{ status.p1a }}</p>
+              <p>Objet : {{ item.p1a }}</p>
+            </div>
           </div>
           <div class="statistiquesSD">
             <div class="labels-stats">
@@ -74,14 +77,17 @@
             </div>
             <v-img class="image" id="image" max-height="50%" max-width="80%" :src=url.p2a></v-img>
             <div class="containerHP">
-              <p>{{ hp.p2a }}</p>
-              <div><div id="hp2"></div></div>
+              <p>{{ hp.p2a }}%</p>
+              <div><div id="hp2" :style="`width: ${hp.p2a}%`"></div></div>
             </div>
             <div class="type">
               <v-img :src="urltype1.p2a" max-width="40%" height="100%" ></v-img>
               <v-img id="type2p2a" :src="urltype2.p2a" max-width="40%" height="100%" v-if="type2show.p2a"></v-img>
             </div>
-            <p>Objet : {{ item.p2a }}</p>
+            <div>
+              <p>Status : {{ status.p2a }}</p>
+              <p>Objet : {{ item.p2a }}</p>
+            </div>
           </div>
           <div class="statistiquesSD">
             <div class="labels-stats">
@@ -118,20 +124,20 @@
         </div>
       </div>
       <div class="teamDown">
-        <div class="banc"><v-img style="width:100%;" :src="tdwnsrc.tdwn1"></v-img><p></p></div>
-        <div class="banc"><v-img style="width:100%;" :src="tdwnsrc.tdwn2"></v-img><p></p></div>
-        <div class="banc"><v-img style="width:100%;" :src="tdwnsrc.tdwn3"></v-img><p></p></div>
-        <div class="banc"><v-img style="width:100%;" :src="tdwnsrc.tdwn4"></v-img><p></p></div>
-        <div class="banc"><v-img style="width:100%;" :src="tdwnsrc.tdwn5"></v-img><p></p></div>
-        <div class="banc"><v-img style="width:100%;" :src="tdwnsrc.tdwn6"></v-img><p></p></div>
+        <div class="banc"><v-img style="width:100%;" id="bd1" :src="bench.p2a.b1"></v-img><p></p></div>
+        <div class="banc"><v-img style="width:100%;" id="bd2" :src="bench.p2a.b2"></v-img><p></p></div>
+        <div class="banc"><v-img style="width:100%;" id="bd3" :src="bench.p2a.b3"></v-img><p></p></div>
+        <div class="banc"><v-img style="width:100%;" id="bd4" :src="bench.p2a.b4"></v-img><p></p></div>
+        <div class="banc"><v-img style="width:100%;" id="bd5" :src="bench.p2a.b5"></v-img><p></p></div>
+        <div class="banc"><v-img style="width:100%;" id="bd6" :src="bench.p2a.b6"></v-img><p></p></div>
       </div>
     </div>
   </div>
 </template>
   
   <script>
+  import Pokemon from "../objects/pokemon"
   import axios from "axios"
-  /* import { toRaw } from 'vue' */
   
   export default ({
     name: "StatistiquesPokemon",
@@ -148,21 +154,24 @@
           team2: {},
           urlBack: "",
           currentBattleID: "",
-          tupsrc: {
-            "tup1": "",
-            "tup2": "",
-            "tup3": "",
-            "tup4": "",
-            "tup5": "",
-            "tup6": "",
-          },
-          tdwnsrc: {
-            "tdwn1": "",
-            "tdwn2": "",
-            "tdwn3": "",
-            "tdwn4": "",
-            "tdwn5": "",
-            "tdwn6": "",
+          team: {"p1a": [], "p2a": []},
+          bench: {
+            "p1a": {
+              "b1": "",
+              "b2": "",
+              "b3": "",
+              "b4": "",
+              "b5": "",
+              "b6": ""
+            },
+            "p2a": {
+              "b1": "",
+              "b2": "",
+              "b3": "",
+              "b4": "",
+              "b5": "",
+              "b6": ""
+            },
           },
           url: {"p1a": require("../assets/images/Pokemon-175px/0.png"), "p2a": require("../assets/images/Pokemon-175px/0.png")},
           urltype1: {"p1a": require("../assets/images/Type/Anglais/dark.png"), "p2a": require("../assets/images/Type/Anglais/fire.png")},
@@ -171,10 +180,12 @@
           nompoke: {"p1a": "Nom Pokémon", "p2a": "Nom Pokémon"},
           firstpoke: {"p1a": "???", "p2a": "???"},
           numpoke: {"p1a": "n° ???", "p2a": "n° ???"},
-          hp: {"p1a": "100%", "p2a": "100%"},
+          hp: {"p1a": "100", "p2a": "100"},
+          status: {"p1a": "normal", "p2a": "normal"},
           item: {"p1a": "???", "p2a": "???"},
           pokemonDataReady: false,
-          battleOn: false
+          battleOn: false,
+          teamReady: false
         };
     },
     methods: {
@@ -182,6 +193,38 @@
         return new Promise(resolve => setTimeout(resolve, ms));
       },
       init(){
+        // Ouvrir une nouvelle fenêtre avec Showdown
+        let showdownWindow = window.open("https://play.pokemonshowdown.com", "_blank");
+
+        // Vérifier si la fenêtre s'est bien ouverte
+        if (showdownWindow) {
+            let checkLoaded = setInterval(async() => {
+                try {
+                    await this.delay(5000)
+                    // Vérifier si le document de la nouvelle fenêtre est chargé
+                    console.log(showdownWindow)
+                    clearInterval(checkLoaded); // Stopper l'intervalle
+                    
+                    // Récupérer le LocalStorage de la nouvelle fenêtre
+                    let showdownStorage = showdownWindow.localStorage;
+                    
+                    // Afficher tout le LocalStorage dans la console
+                    console.log("LocalStorage de Showdown :", showdownStorage);
+
+                    // Exemple : Récupérer uniquement les teams
+                    Object.keys(showdownStorage).forEach(key => {
+                        if (key.startsWith("showdown_teams")) {
+                            console.log(`Équipe trouvée : ${key}`, showdownStorage.getItem(key));
+                        }
+                    });
+                } catch (error) {
+                    console.log("Erreur d'accès au LocalStorage : ", error);
+                }
+            }, 5000); // Vérifier toutes les 1 seconde
+        } else {
+            console.log("Impossible d'ouvrir une nouvelle fenêtre. Vérifiez que les pop-ups ne sont pas bloquées.");
+        }
+
         let thisParent = this
 
         // URL du serveur WebSocket
@@ -208,13 +251,10 @@
           let battleMatch = message.match(/battle-[a-z0-9-]+/);
           console.log(`🔹 ${event.data}`)
 
-          console.log(message.includes("☆battle"))
-          console.log(thisParent.battleOn)
-
           if (message.includes("☆battle") && !thisParent.battleOn) {
             console.log("attempt to join ", battleMatch[0])
             ws.send(`|/join ${battleMatch[0]}`);
-            console.log(`📡 Suivi du combat ${thisParent.currentBattleID}...`);
+            console.log(`📡 Suivi du combat ${battleMatch[0]}...`);
             thisParent.battleOn = true;
           }
 
@@ -224,17 +264,66 @@
             thisParent.battleOn = false;
           }
 
+          if (message.includes("-damage")){
+            let messageSplitted = message.split('|')
+            messageSplitted.forEach(async (element, index) => {
+              if (element == "-damage") {
+                let player = messageSplitted[index+1].split(":")[0]
+                let poke = messageSplitted[index+1].split(":")[1].trim()
+                let damage = messageSplitted[index+2]
+                console.log(player)
+                console.log(poke)
+                console.log(damage)
+                await thisParent.processDamage(player, poke, damage)
+              }
+            });
+          }
+
+          if (message.includes("-status")){
+            let messageSplitted = message.split('|')
+            messageSplitted.forEach(async (element, index) => {
+              if (element == "-status") {
+                let player = messageSplitted[index+1].split(":")[0]
+                let poke = messageSplitted[index+1].split(":")[1].trim()
+                let status = messageSplitted[index+2]
+                console.log(player)
+                console.log(poke)
+                console.log(status)
+                await thisParent.processStatus(player, poke, status)
+              }
+            });  
+          }
+          
+          if (message.includes("-heal")){
+            let messageSplitted = message.split('|')
+            messageSplitted.forEach(async (element, index) => {
+              if (element == "-heal") {
+                let player = messageSplitted[index+1].split(":")[0]
+                let poke = messageSplitted[index+1].split(":")[1].trim()
+                let damage = messageSplitted[index+2]
+                await thisParent.processDamage(player, poke, damage)
+              }
+            });
+          }
+
+          if (message.includes("|teampreview")){
+            let messageSplitted = message.split('|')
+            messageSplitted.forEach(async (element, index) => {
+              await thisParent.processPokeBench(element, index, messageSplitted)
+            });
+            console.log("teams", thisParent.team)
+          }
+
           if (event.data.includes("switch")) {
+            console.log("eventswitch")
             let message = event.data
-            console.log(message.split("|").indexOf("switch"))
             let indexSwitch = message.split("|").indexOf("switch")
             let namePokeSwitched = message.split("|")[indexSwitch + 2].split(",")[0].trim()
             let player = message.split("|")[indexSwitch + 1].split(":")[0]
             thisParent.switch(namePokeSwitched, player, thisParent)
 
-            if (message.split("|").indexOf("switch", indexSwitch + 1)){
-              console.log(message.split("|").indexOf("switch", indexSwitch + 1))
-              let indexSwitch2 = message.split("|").indexOf("switch", indexSwitch + 1)
+            let indexSwitch2 = message.split("|").indexOf("switch", indexSwitch + 1)
+            if (indexSwitch2 != -1){
               let namePokeSwitched2 = message.split("|")[indexSwitch2 + 2].split(",")[0].trim()
               let player2 = message.split("|")[indexSwitch2 + 1].split(":")[0]
               await thisParent.delay(500)
@@ -258,34 +347,62 @@
         document.getElementById(id).offsetWidth;
         document.getElementById(id).style.animation = null
       },
-      switch(pokemon, player, thisParent){
-        console.log(player, "switch on", pokemon)
-        axios.get(thisParent.urlBack + "pokemon/" + pokemon)
-        .then((response) => {
-          console.log(response)
-          console.log("numpoke", thisParent.numPoke)
-          thisParent.numpoke[player] = response.data[0]
-          thisParent.nompoke[player] = response.data[1]
-          thisParent.url[player] = require("../assets/images/Pokemon-175px/" + response.data[0] + ".png")
-          thisParent.urltype1[player] = require("../assets/images/Type/Anglais/" + response.data[2] + ".png")
-          if (response.data[3] !== "none") {
-            thisParent.urltype2[player] = require("../assets/images/Type/Anglais/" + response.data[3] + ".png")
-            document.getElementById("type2p2a").style.display = "block"
-          }  
-          else document.getElementById("type2p2a").style.display = "none"
-          thisParent.pv[player] = response.data[4]
-          thisParent.att[player] = response.data[5]
-          thisParent.attspe[player] = response.data[6]
-          thisParent.def[player] = response.data[7]
-          thisParent.defspe[player] = response.data[8]
-          thisParent.vitesse[player] = response.data[9]
-          let index = 4
-          let cats = ["pv", "att", "attspe", "def", "defspe", "vitesse"]
-          cats.forEach(element => {
-            thisParent.addAnimation(element, player, response.data[index])
-            index += 1
-          });
-        })
+      async processStatus(player, poke, status){
+        this.team[player][poke].status = status
+        this.hp[player] = status
+      },
+      async processDamage(player, poke, damage){
+        let damageFormat = damage.split("/")[0].split(" ")[0]
+        this.team[player][poke].hp = damageFormat
+        this.hp[player] = damageFormat
+        if (damageFormat == "0") {
+          this.team[player][poke].ko = true
+          let index = Object.keys(this.team[player]).indexOf(poke)
+          if (player == "p2a") {
+            document.getElementById("bd"+ (index + 1)).style.filter = "grayscale(90%)"
+          }
+          if (player == "p1a") { 
+            document.getElementById("bu"+ (index + 1)).style.filter = "grayscale(90%)"
+          }
+        }
+      },
+      async processPokeBench(element, index, messageSplitted){
+        if (element == "poke") {
+          let poke = messageSplitted[index+2].split(",")[0]
+          let player = messageSplitted[index+1] + "a"
+          this.team[player].push(poke)
+          if (this.team["p1a"].length == 6 && this.team["p2a"].length == 6) {
+            let jsonPoke = {}
+            axios.get(this.urlBack + "pokemonTeam/" + this.team["p1a"].join("_") + "_" + this.team["p2a"].join("_"))
+            .then(response => {
+              console.log(response)
+              response.data.forEach((elementPoke, index) => {
+                let pokeObject = new Pokemon(this)
+                pokeObject.fillInformation2(elementPoke)
+                jsonPoke[pokeObject.nomAnglais] = pokeObject
+                if (index <= 5) {
+                  this.bench["p1a"]["b" + (index+1)] = pokeObject.url
+                  this.team["p1a"] = jsonPoke
+                }
+                else if (index <= 11) {
+                  this.bench["p2a"]["b" + (index-5)] = pokeObject.url
+                  this.team["p2a"] = jsonPoke
+                }
+                if (index == 5) jsonPoke = {}
+              }) 
+
+              console.log("team player", this.team)
+            })
+          }
+        }
+      },
+      async switch(pokemon, player){
+        console.log("switch", pokemon)
+        while(typeof this.team[player][pokemon] == "string" || this.team[player][pokemon] == undefined) {
+          console.log("waiting")
+          await this.delay(1000)
+        }
+        this.fillPokemonActiv(pokemon, player)
       },
       async getUserBattles(username) {
         let url = `https://pokemonshowdown.com/users/${username}.json`;
@@ -299,11 +416,32 @@
             console.error("❌ Erreur :", error);
         }
       },
-      fillbunch(){
-      },
       async getDataPokemon(){
       },
-      fillPokemonActiv(){
+      fillPokemonActiv(pokemon, player){
+        this.hp[player] = this.team[player][pokemon].hp
+        this.status[player] = this.team[player][pokemon].status
+        console.log("fillactive", this.team[player][pokemon])
+        let poke = this.team[player][pokemon]
+        this.url[player] = poke.url
+        this.nompoke[player] = poke.nompoke
+        this.numpoke[player] = poke.numpoke
+        this.urltype1[player] = poke.urltype1
+        if (poke.urltype2 !== "none") this.urltype2[player] = poke.urltype2
+        else this.type2show[player] = false
+        this.pv[player] = poke.pv
+        this.att[player] = poke.att
+        this.attspe[player] = poke.attspe
+        this.def[player] = poke.def
+        this.defspe[player] = poke.defspe
+        this.vitesse[player] = poke.vitesse
+        
+        this.addAnimation("pv", player, poke.pv)
+        this.addAnimation("att", player, poke.att)
+        this.addAnimation("def", player, poke.def)
+        this.addAnimation("attspe", player, poke.attspe)
+        this.addAnimation("defspe", player, poke.defspe)
+        this.addAnimation("vitesse", player, poke.vitesse)
       },
       damage(){
       },
