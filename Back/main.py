@@ -2,9 +2,12 @@ from fastapi import FastAPI
 from routes import router
 import psycopg2
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 cur = ""
 app = FastAPI()
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 app.add_middleware(
     CORSMiddleware,
@@ -16,7 +19,7 @@ app.add_middleware(
 
 @app.on_event("startup")
 def start_up_db(): 
-    conn = psycopg2.connect("host='localhost' dbname='Pokemon' user='postgres' password='Dragon-49'")
+    conn = psycopg2.connect(DATABASE_URL)
     app.conn = conn
     app.cur = conn.cursor()
 
