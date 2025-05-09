@@ -11,7 +11,7 @@ const myPlugin = {
     // Ajoutez votre fonction globale ici
     app.config.globalProperties.$getURLBack = function(){
       if (window.location.href.includes("espacepersodaprog")){
-          return "http://85.31.238.211:8000/"
+          return "https://pokemon-1xp8.onrender.com/"
       }
       else {
           return "http://127.0.0.1:8000/"
