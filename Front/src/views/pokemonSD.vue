@@ -63,6 +63,9 @@
               <div id="p1avitesse" class="animstarts"></div>
             </div>
           </div>
+          <div class="moves">
+            <div v-for="move in moves.p1a" :key="move.nom">{{ move.nom }}</div>
+          </div>
         </div>
       </div>
 
@@ -121,6 +124,9 @@
               <div id="p2avitesse" class="animstarts"></div>
             </div>
           </div>
+          <div class="moves">
+            <div v-for="move in moves.p2a" :key="move.nom">{{ move.nom }}</div>
+          </div>
         </div>
       </div>
       <div class="teamDown">
@@ -173,6 +179,10 @@
               "b6": ""
             },
           },
+          moves: {
+            "p1a": [],
+            "p2a": []
+          },
           url: {"p1a": require("../assets/images/Pokemon-175px/0.png"), "p2a": require("../assets/images/Pokemon-175px/0.png")},
           urltype1: {"p1a": require("../assets/images/Type/Anglais/dark.png"), "p2a": require("../assets/images/Type/Anglais/fire.png")},
           urltype2: {"p1a": require("../assets/images/Type/Anglais/flying.png"), "p2a": require("../assets/images/Type/Anglais/ghost.png")},
@@ -192,7 +202,7 @@
       delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
       },
-      init(){
+      projetMove(){
         // Ouvrir une nouvelle fenêtre avec Showdown
         let showdownWindow = window.open("https://play.pokemonshowdown.com", "_blank");
 
@@ -224,7 +234,8 @@
         } else {
             console.log("Impossible d'ouvrir une nouvelle fenêtre. Vérifiez que les pop-ups ne sont pas bloquées.");
         }
-
+      },
+      init(){
         let thisParent = this
 
         // URL du serveur WebSocket
@@ -275,6 +286,19 @@
                 console.log(poke)
                 console.log(damage)
                 await thisParent.processDamage(player, poke, damage)
+              }
+            });
+          }
+
+          if (message.includes("move")){
+            console.log(message)
+            let messageSplitted = message.split('|')
+            messageSplitted.forEach(async (element, index) => {
+              if (element == "move") {
+                let player = messageSplitted[index+1].split(":")[0]
+                let poke = messageSplitted[index+1].split(":")[1].trim()
+                let move = messageSplitted[index+2]
+                await thisParent.processMove(player, poke, move)
               }
             });
           }
@@ -366,6 +390,20 @@
           }
         }
       },
+      async processMove(player, poke, move){
+        console.log(player)
+        console.log(move)
+
+        let alreadyExist = false
+        let noMove = 0
+
+        this.team[player][poke].moves.forEach((moveFromPoke) => {
+            if (moveFromPoke.nom == move) alreadyExist = true
+            if (moveFromPoke.nom != "") noMove += 1
+        })
+        
+        if (!alreadyExist) this.team[player][poke].moves[noMove].nom = move
+      },
       async processPokeBench(element, index, messageSplitted){
         if (element == "poke") {
           let poke = messageSplitted[index+2].split(",")[0]
@@ -435,6 +473,8 @@
         this.def[player] = poke.def
         this.defspe[player] = poke.defspe
         this.vitesse[player] = poke.vitesse
+
+        this.moves[player] = [poke.moves[0], poke.moves[1], poke.moves[2], poke.moves[3]]
         
         this.addAnimation("pv", player, poke.pv)
         this.addAnimation("att", player, poke.att)
@@ -442,12 +482,6 @@
         this.addAnimation("attspe", player, poke.attspe)
         this.addAnimation("defspe", player, poke.defspe)
         this.addAnimation("vitesse", player, poke.vitesse)
-      },
-      damage(){
-      },
-      itemInfo(){
-      },
-      dispatch(){
       },
       async updateSDSession(){
       }

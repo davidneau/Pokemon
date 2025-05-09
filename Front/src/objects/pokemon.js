@@ -1,10 +1,12 @@
 import axios from "axios"
 import { reactive } from 'vue';
+import Move from "./move"
 
 export default class Pokemon {
     // Constructeur : initialise les propriétés de l'objet
     constructor(thisParent) {
         this.thisParent = thisParent
+        this.moves = [new Move(this, ""), new Move(this, ""), new Move(this, ""), new Move(this, "")]
     }
 
     async fillInformation(nom, urlBack){
