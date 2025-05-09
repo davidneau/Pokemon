@@ -5,6 +5,8 @@ import time
 
 router = APIRouter()
 
+
+
 @router.get('/pokemon/{nameorid}')
 def getStats(request: Request, nameorid):
     try:
