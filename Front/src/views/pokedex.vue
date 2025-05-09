@@ -180,16 +180,20 @@ html {
 .main{
     display:flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center
 }
 #Pokedex {
     background-color: black;
-    width: 1214px;
-    height: 665px;
+    width: 80%;
+    max-height: calc(100vh - 64px);
     display: flex;
     flex-wrap: wrap;
     overflow: auto;
+}
+
+#Pokedex>div{
+    width: 10%;
 }
 
 .entry {
@@ -256,6 +260,10 @@ html {
 @media only screen and (max-width: 600px) {
     .main{
         display: block;
+    }
+
+    #Pokedex>div{
+        width: 20%;
     }
 
     .infos{
