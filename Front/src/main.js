@@ -10,7 +10,7 @@ const myPlugin = {
   install(app) {
     // Ajoutez votre fonction globale ici
     app.config.globalProperties.$getURLBack = function(){
-      if (window.location.href.includes("espacepersodaprog")){
+      if (window.location.href.includes("pokemonda")){
           return "https://pokemon-1xp8.onrender.com/"
       }
       else {
