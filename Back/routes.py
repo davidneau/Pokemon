@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request
 """ from sd import FollowerClient """
 from threading import Thread
+import requests
 import time
 
 router = APIRouter()
@@ -33,19 +34,20 @@ def getStats(request: Request, team):
         list_of_stat.append(resultset)
     return list_of_stat
 
-
-followerClient = ""
-
-@router.get('/initSDSession')
-async def initSDSession():
-    def initiation(username, password):
-        global followerClient 
-        followerClient= FollowerClient(name=username, password=password)
-        followerClient.start()
-    with open("./login.txt", "rt") as f, open("./owner.txt", "rt") as o:
-        username, password = f.read().strip().splitlines()
-    t = Thread(target=initiation, args=[username, password])
-    t.run()
+@router.get('/move/{nameorid}')
+async def getStats(request: Request, nameorid):
+    try:
+        key = int(nameorid)
+        request.app.cur.execute(f'SELECT * FROM main."Move" where index={key}')
+    except:
+        key = nameorid
+        key = key.lower()
+        key = key.replace(" ", "-")
+        print(f'SELECT * FROM main."Move" where "name"=\'{key}\'')
+        request.app.cur.execute(f'SELECT * FROM main."Move" where "name"=\'{key}\'')
+    resultset = request.app.cur.fetchone()
+    print("result", resultset)
+    return resultset
 
 @router.get('/getLogsSD')
 async def getLogsSD():
@@ -90,5 +92,39 @@ def update(request: Request):
     for i in range(1025):
         print(i)
         request.app.cur.execute(f"INSERT INTO main.pokedex(numero, name, \"shinyPoGO\", game, \"shinyHome\", shadow, \"threeStars\", perfect, pure, mega, \"normalPoGO\", \"normalHome\") VALUES ("+str(i+1)+", '???', false, 'PokemonGO', false, false, false, false, false, false, true, true)")
+    request.app.conn.commit()
+    return "OK"
+
+
+@router.get('/moveUpdate/')
+def update(request: Request):
+    i=2
+    baseurl = "https://pokeapi.co/api/v2/move/"
+
+    while 1==1:
+        print(i)
+        response = requests.get("https://pokeapi.co/api/v2/move/" + str(i))
+
+        # Vérifier que la requête a réussi
+        if response.status_code == 200:
+            print("Contenu HTML récupéré avec succès :")
+            res = response.json()
+            name = res["name"]
+            acc = res["accuracy"]
+            if acc == None:
+                acc = 0
+            pp = res["pp"]
+            power = res["power"]
+            if power == None:
+                power = 0
+            priority = res["priority"]
+            category = res["damage_class"]["name"]
+            typeAtt = res["type"]["name"]
+            request.app.cur.execute(f'INSERT INTO main."Move"(name, pp, priority, category, power, type, accuracy) VALUES (\'{name}\', {pp}, {priority}, \'{category}\', {power}, \'{typeAtt}\', {acc});')
+            
+        else:
+            print(f"Erreur lors de la requête : statut {response.status_code}")
+            break
+        i+=1
     request.app.conn.commit()
     return "OK"

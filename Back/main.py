@@ -40,4 +40,4 @@ app.include_router(router)
 
 if __name__ == "__main__":
     port = int(PORT)  # fallback en local
-    uvicorn.run("main:app", host="0.0.0.0", port=port)
+    uvicorn.run("main:app", host="0.0.0.0", port=port, workers=4)

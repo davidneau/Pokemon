@@ -33,38 +33,68 @@
           </div>
           <div class="statistiquesSD">
             <div class="labels-stats">
-              <label>HP</label>
-              <label>{{ pv.p1a }}</label>
-              <div id="p1apv" class="animstarts"></div>
+              <div>
+                <label>HP</label>
+                <label>{{ pv.p1a }}</label>
+              </div>
+              <div>
+                <div id="p1apv" class="animstarts"></div>
+              </div>
             </div>
             <div class="labels-stats">
-              <label>Att</label>
-              <label>{{ att.p1a }}</label>
-              <div id="p1aatt" class="animstarts"></div>
+              <div>
+                <label>Att</label>
+                <label>{{ att.p1a }}</label>
+              </div>
+              <div>
+                <div id="p1aatt" class="animstarts"></div>
+              </div>
             </div>
             <div class="labels-stats">
-              <label>Def</label>
-              <label>{{ def.p1a }}</label>
-              <div id="p1adef" class="animstarts"></div>
+              <div>
+                <label>Def</label>
+                <label>{{ def.p1a }}</label>
+              </div>
+              <div>
+                <div id="p1adef" class="animstarts"></div>
+              </div>
             </div>
             <div class="labels-stats">
-              <label>SpeA</label>
-              <label>{{ attspe.p1a }}</label>
-              <div id="p1aattspe" class="animstarts"></div>
+              <div>
+                <label>SpeA</label>
+                <label>{{ attspe.p1a }}</label>
+              </div>
+              <div>
+                <div id="p1aattspe" class="animstarts"></div>
+              </div>
             </div>
             <div class="labels-stats">
-              <label>SpeD</label>
-              <label>{{ defspe.p1a }}</label>
-              <div id="p1adefspe" class="animstarts"></div>
+              <div>
+                <label>SpeD</label>
+                <label>{{ defspe.p1a }}</label>
+              </div>
+              <div>
+                <div id="p1adefspe" class="animstarts"></div>
+              </div>
             </div>
             <div class="labels-stats">
-              <label>Spd</label>
-              <label>{{ vitesse.p1a }}</label>
-              <div id="p1avitesse" class="animstarts"></div>
+              <div>
+                <label>Spd</label>
+                <label>{{ vitesse.p1a }}</label>
+              </div>
+              <div>
+                <div id="p1avitesse" class="animstarts"></div>
+              </div>
             </div>
           </div>
           <div class="moves">
-            <div v-for="move in moves.p1a" :key="move.nom">{{ move.nom }}</div>
+            <div v-for="move in moves.p1a" :key="move.nom">
+                <div v-if="move.nom != ''">
+                    <div><strong>{{ move.nom }}</strong> <div>{{ move.pp }} pp/ {{ move.ppmax }}</div></div>
+                    <div><span>pr: {{ move.prior }}</span> <span>cat:{{ move.cat }}</span> <span>bp:{{ move.power }}</span></div> 
+                    <div><div>type:<v-img style="height: 20px; width: 50px;" :src="require(`../assets/images/Type/Anglais/${move.type}.png`)"></v-img></div> <span>acc:{{  move.acc }}</span></div>
+                </div>
+            </div>
           </div>
         </div>
       </div>
@@ -94,38 +124,68 @@
           </div>
           <div class="statistiquesSD">
             <div class="labels-stats">
-              <label>HP</label>
-              <label>{{ pv.p2a }}</label>
-              <div id="p2apv" class="animstarts"></div>
+              <div>
+                <label>HP</label>
+                <label>{{ pv.p2a }}</label>
+              </div>
+              <div>
+                <div id="p2apv" class="animstarts"></div>
+              </div>
             </div>
             <div class="labels-stats">
-              <label>Att</label>
-              <label>{{ att.p2a }}</label>
-              <div id="p2aatt" class="animstarts"></div>
+              <div>
+                <label>Att</label>
+                <label>{{ att.p2a }}</label>
+              </div>
+              <div>
+                <div id="p2aatt" class="animstarts"></div>
+              </div>
             </div>
             <div class="labels-stats">
-              <label>Def</label>
-              <label>{{ def.p2a }}</label>
-              <div id="p2adef" class="animstarts"></div>
+              <div>
+                <label>Def</label>
+                <label>{{ def.p2a }}</label>
+              </div>
+              <div>
+                <div id="p2adef" class="animstarts"></div>
+              </div>
             </div>
             <div class="labels-stats">
-              <label>SpeA</label>
-              <label>{{ attspe.p2a }}</label>
-              <div id="p2aattspe" class="animstarts"></div>
+              <div>
+                <label>SpeA</label>
+                <label>{{ attspe.p2a }}</label>
+              </div>
+              <div>
+                <div id="p2aattspe" class="animstarts"></div>
+              </div>
             </div>
             <div class="labels-stats">
-              <label>SpeD</label>
-              <label>{{ defspe.p2a }}</label>
-              <div id="p2adefspe" class="animstarts"></div>
+              <div>
+                <label>SpeD</label>
+                <label>{{ defspe.p2a }}</label>
+              </div>
+              <div>
+                <div id="p2adefspe" class="animstarts"></div>
+              </div>
             </div>
             <div class="labels-stats">
-              <label>Spd</label>
-              <label>{{ vitesse.p2a }}</label>
-              <div id="p2avitesse" class="animstarts"></div>
+              <div>
+                <label>Spd</label>
+                <label>{{ vitesse.p2a }}</label>
+              </div>
+              <div>
+                <div id="p2avitesse" class="animstarts"></div>
+              </div>
             </div>
           </div>
           <div class="moves">
-            <div v-for="move in moves.p2a" :key="move.nom">{{ move.nom }}</div>
+            <div v-for="move in moves.p2a" :key="move.nom">
+                <div v-if="move.nom != ''">
+                    <div><strong>{{ move.nom }}</strong> <div>{{ move.pp }} pp/ {{ move.ppmax }}</div></div>
+                    <div><span>pr: {{ move.prior }}</span> <span>cat:{{ move.cat }}</span> <span>bp:{{ move.power }}</span></div> 
+                    <div><div>type:<v-img style="height: 20px; width: 50px;" :src="require(`../assets/images/Type/Anglais/${move.type}.png`)"></v-img></div> <span>acc:{{  move.acc }}</span></div>
+                </div>
+            </div>
           </div>
         </div>
       </div>
@@ -141,7 +201,7 @@
   </div>
 </template>
   
-  <script>
+<script>
   import Pokemon from "../objects/pokemon"
   import axios from "axios"
   
@@ -149,6 +209,7 @@
     name: "StatistiquesPokemon",
     data() {
         return {
+          switchPlayer: false,
           pokemon: {"p1a": "", "p2a": ""},
           pv: {"p1a": 0, "p2a": 0},
           att: {"p1a": 0, "p2a": 0},
@@ -262,11 +323,28 @@
           let battleMatch = message.match(/battle-[a-z0-9-]+/);
           console.log(`🔹 ${event.data}`)
 
+          if (this.switchPlayer){
+            message = message.replace("p1a", "$$$$")
+            message = message.replace("p2a", "p1a")
+            message = message.replace("$$$$", "p2a")
+          }
+
           if (message.includes("☆battle") && !thisParent.battleOn) {
             console.log("attempt to join ", battleMatch[0])
             ws.send(`|/join ${battleMatch[0]}`);
             console.log(`📡 Suivi du combat ${battleMatch[0]}...`);
             thisParent.battleOn = true;
+          }
+
+          if (message.includes("|init|battle")) {
+            let messageSplitted = message.split('|')
+            messageSplitted.forEach(async (element, index) => {
+              if (element == "player" && messageSplitted[index + 1] == "p1") {
+                if (messageSplitted[index + 2] !== "Mahotsuki") {
+                    this.switchPlayer = true
+                }
+              }
+            });
           }
 
           if (message.includes("win") || message.includes("forfeited")){
@@ -291,7 +369,6 @@
           }
 
           if (message.includes("move")){
-            console.log(message)
             let messageSplitted = message.split('|')
             messageSplitted.forEach(async (element, index) => {
               if (element == "move") {
@@ -365,11 +442,15 @@
         };
       },
       addAnimation(cat, player, stat){
-        let id = player + cat
-        document.getElementById(id).style.setProperty('--arrive', stat + "px")
-        document.getElementById(id).style.animation = 'none'
+        let id = player + cat;
+        console.log("a", document.getElementById(id))
+        if (stat < 70) document.getElementById(id).style.backgroundColor = "red"
+        else if (stat < 100 && stat >=70) document.getElementById(id).style.backgroundColor = "yellow"
+        else if (stat >= 100) document.getElementById(id).style.backgroundColor = "green"
+        document.getElementById(id).style.setProperty('--arrive', (stat/255) * 100 + "%");
+        document.getElementById(id).style.animation = 'none';
         document.getElementById(id).offsetWidth;
-        document.getElementById(id).style.animation = null
+        document.getElementById(id).style.animation = null;
       },
       async processStatus(player, poke, status){
         this.team[player][poke].status = status
@@ -396,13 +477,23 @@
 
         let alreadyExist = false
         let noMove = 0
+        let movePoke
 
         this.team[player][poke].moves.forEach((moveFromPoke) => {
-            if (moveFromPoke.nom == move) alreadyExist = true
+            if (moveFromPoke.nom == move) {
+                alreadyExist = true
+                movePoke = moveFromPoke
+            }
             if (moveFromPoke.nom != "") noMove += 1
         })
         
-        if (!alreadyExist) this.team[player][poke].moves[noMove].nom = move
+        if (!alreadyExist) {
+            this.team[player][poke].moves[noMove].nom = move
+            this.team[player][poke].moves[noMove].fillInformation(move, this.urlBack)
+        }
+        else {
+            movePoke.pp -= 1
+        }
       },
       async processPokeBench(element, index, messageSplitted){
         if (element == "poke") {
@@ -505,8 +596,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 60%;
-  margin-left: 10px;
+  height: 80%;
   width: 50%;
 }
 
@@ -540,7 +630,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  width: 50%;
+  width: 100%;
   height: 100%;
 }
 
@@ -583,11 +673,24 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 16.66%;
+  height: 15%;
   justify-content: flex-start;
 }
 
-.labels-stats div{
+.labels-stats div:first-child{
+  width: 20%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.labels-stats div:nth-child(2){
+  width: 80%;
+  height: 100%;
+}
+
+.labels-stats div div{
   width: 1px;
   height: 80%;
   background-color: black;
@@ -685,5 +788,38 @@
     width: var(--arrive);
   }
 }
+
+.moves {
+    height: 100%;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.moves>div{
+    background-color: red;
+    height: 24%;
+    width: 100%;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.moves>div>div>div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.moves>div>div>div>div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+
 </style>
   
