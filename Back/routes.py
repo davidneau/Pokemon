@@ -69,22 +69,28 @@ def getAllPokemons(request: Request):
     return resultset
 
 
+@router.get('/customRequest')
+def customRequest(request: Request):
+    request.app.cur.execute('ALTER TABLE public."pokedex2" ADD COLUMN AM boolean;')
+    resultset = request.app.cur.fetchall()
+    return resultset
+
 @router.get('/getAllPokemonsData/{filtre}')
 def getAllPokemonsData(request: Request, filtre):
-    print(f'SELECT * FROM public."pokedex" WHERE "{filtre}"=true ORDER BY numero')
-    request.app.cur.execute(f'SELECT * FROM public."pokedex" WHERE "{filtre}"=true ORDER BY numero')
+    print(f'SELECT * FROM public."pokedex2" WHERE "{filtre}"=true ORDER BY numero')
+    request.app.cur.execute(f'SELECT * FROM public."pokedex2" WHERE "{filtre}"=true ORDER BY numero')
     resultset = request.app.cur.fetchall()
     return resultset
 
 @router.get('/addPoke/{num}/{filtre}')
 def addPoke(request: Request, num, filtre):
-    request.app.cur.execute(f"UPDATE public.pokedex SET \"{filtre}\"=true	WHERE numero={num}")
+    request.app.cur.execute(f"UPDATE public.pokedex2 SET \"{filtre}\"=true	WHERE numero={num}")
     request.app.conn.commit()
     return "OK"
 
 @router.get('/deletePoke/{num}/{filtre}')
 def deletePoke(request: Request, num, filtre):
-    request.app.cur.execute(f"UPDATE public.pokedex SET \"{filtre}\"=false WHERE numero={num}")
+    request.app.cur.execute(f"UPDATE public.pokedex2 SET \"{filtre}\"=false WHERE numero={num}")
     request.app.conn.commit()
     return "OK"
 
