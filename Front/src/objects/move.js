@@ -13,6 +13,7 @@ export default class Move {
         .then(response => {
             let data = response.data
             console.log(data)
+            this.nom = data[0]
             this.power = data[4]
             this.acc = data[6]
             this.pp = data[1] - 1

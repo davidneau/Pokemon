@@ -324,9 +324,9 @@
           console.log(`🔹 ${event.data}`)
 
           if (this.switchPlayer){
-            message = message.replace("p1a", "$$$$")
-            message = message.replace("p2a", "p1a")
-            message = message.replace("$$$$", "p2a")
+            message = message.replace(/p1a/g, "__TEMP__");
+            message = message.replace(/p2a/g, "p1a");
+            message = message.replace(/__TEMP__/g, "p2a");
           }
 
           if (message.includes("☆battle") && !thisParent.battleOn) {
@@ -342,6 +342,7 @@
               if (element == "player" && messageSplitted[index + 1] == "p1") {
                 if (messageSplitted[index + 2] !== "Mahotsuki") {
                     this.switchPlayer = true
+                    console.log("switch player", this.switchPlayer)
                 }
               }
             });
@@ -369,6 +370,7 @@
           }
 
           if (message.includes("move")){
+            console.log("------------------ move")
             let messageSplitted = message.split('|')
             messageSplitted.forEach(async (element, index) => {
               if (element == "move") {
@@ -410,7 +412,7 @@
           if (message.includes("|teampreview")){
             let messageSplitted = message.split('|')
             messageSplitted.forEach(async (element, index) => {
-              await thisParent.processPokeBench(element, index, messageSplitted)
+              await thisParent.processPokeBench(element, index, messageSplitted, this)
             });
             console.log("teams", thisParent.team)
           }
@@ -474,6 +476,7 @@
       async processMove(player, poke, move){
         console.log(player)
         console.log(move)
+        console.log(this.team)
 
         let alreadyExist = false
         let noMove = 0
@@ -487,15 +490,19 @@
             if (moveFromPoke.nom != "") noMove += 1
         })
         
+        console.log(alreadyExist)
         if (!alreadyExist) {
-            this.team[player][poke].moves[noMove].nom = move
-            this.team[player][poke].moves[noMove].fillInformation(move, this.urlBack)
+            await this.team[player][poke].moves[noMove].fillInformation(move, this.urlBack)
+            console.log(this.team[player][poke])
+            console.log(poke)
+            console.log(move)
+            console.log(player)
         }
         else {
             movePoke.pp -= 1
         }
       },
-      async processPokeBench(element, index, messageSplitted){
+      async processPokeBench(element, index, messageSplitted, thisParent){
         if (element == "poke") {
           let poke = messageSplitted[index+2].split(",")[0]
           let player = messageSplitted[index+1] + "a"
@@ -509,18 +516,39 @@
                 let pokeObject = new Pokemon(this)
                 pokeObject.fillInformation2(elementPoke)
                 jsonPoke[pokeObject.nomAnglais] = pokeObject
-                if (index <= 5) {
-                  this.bench["p1a"]["b" + (index+1)] = pokeObject.url
-                  this.team["p1a"] = jsonPoke
+                if (thisParent.switchPlayer){
+                    if (index <= 5) {
+                    this.bench["p1a"]["b" + (index+1)] = pokeObject.url
+                    this.team["p1a"] = jsonPoke
+                    }
+                    else if (index <= 11) {
+                    this.bench["p2a"]["b" + (index-5)] = pokeObject.url
+                    this.team["p2a"] = jsonPoke
+                    }
+                    if (index == 5) jsonPoke = {}
+                } else {
+                    if (index <= 5) {
+                    this.bench["p2a"]["b" + (index+1)] = pokeObject.url
+                    this.team["p2a"] = jsonPoke
+                    }
+                    else if (index <= 11) {
+                    this.bench["p1a"]["b" + (index-5)] = pokeObject.url
+                    this.team["p1a"] = jsonPoke
+                    }
+                    if (index == 5) jsonPoke = {}    
                 }
-                else if (index <= 11) {
-                  this.bench["p2a"]["b" + (index-5)] = pokeObject.url
-                  this.team["p2a"] = jsonPoke
-                }
-                if (index == 5) jsonPoke = {}
               }) 
-
-              console.log("team player", this.team)
+/* 
+              let teamtest = this.team["p1a"]
+              if (thisParent.switchPlayer) {
+                console.log("team switch")
+                let teamTemp = this.team["p1a"]
+                this.team["p1a"] = this.team["p2a"]
+                this.team["p2a"] = teamTemp
+                console.log(this.team["p2a"])
+                console.log(this.team["p1a"])
+                console.log(teamtest == this.team["p1a"])
+              } */
             })
           }
         }
