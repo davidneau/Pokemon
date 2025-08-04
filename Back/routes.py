@@ -12,11 +12,12 @@ router = APIRouter()
 def getStats(request: Request, nameorid):
     try:
         key = int(nameorid)
-        request.app.cur.execute(f'SELECT * FROM main."Statistiques" where index={key}')
+        request.app.cur.execute(f'SELECT * FROM public."Statistiques" where index={key}')
+        print(f'SELECT * FROM public."Statistiques" where index={key}')
     except:
         key = nameorid
-        print(f'SELECT * FROM main."Statistiques" where "Nom anglais"=\'{key}\'')
-        request.app.cur.execute(f'SELECT * FROM main."Statistiques" where "Nom anglais"=\'{key}\'')
+        request.app.cur.execute(f'SELECT * FROM public."Statistiques" where "Nom anglais"=\'{key}\'')
+        print(f'SELECT * FROM public."Statistiques" where "Nom anglais"=\'{key}\'')
     resultset = request.app.cur.fetchone()
     print("result", resultset)
     return resultset
@@ -27,8 +28,8 @@ def getStats(request: Request, team):
     print(team)
     list_of_stat = []
     for poke in team:
-        print(f'SELECT * FROM main."Statistiques" where "Nom anglais"=\'{poke}\'')
-        request.app.cur.execute(f'SELECT * FROM main."Statistiques" where lower("Nom anglais")=\'{poke.lower()}\'')
+        print(f'SELECT * FROM public."Statistiques" where "Nom anglais"=\'{poke}\'')
+        request.app.cur.execute(f'SELECT * FROM public."Statistiques" where lower("Nom anglais")=\'{poke.lower()}\'')
         resultset = request.app.cur.fetchone()
         print("result", resultset)
         list_of_stat.append(resultset)
@@ -38,13 +39,13 @@ def getStats(request: Request, team):
 async def getStats(request: Request, nameorid):
     try:
         key = int(nameorid)
-        request.app.cur.execute(f'SELECT * FROM main."Move" where index={key}')
+        request.app.cur.execute(f'SELECT * FROM public."Move" where index={key}')
     except:
         key = nameorid
         key = key.lower()
         key = key.replace(" ", "-")
-        print(f'SELECT * FROM main."Move" where "name"=\'{key}\'')
-        request.app.cur.execute(f'SELECT * FROM main."Move" where "name"=\'{key}\'')
+        print(f'SELECT * FROM public."Move" where "name"=\'{key}\'')
+        request.app.cur.execute(f'SELECT * FROM public."Move" where "name"=\'{key}\'')
     resultset = request.app.cur.fetchone()
     print("result", resultset)
     return resultset
@@ -63,27 +64,27 @@ async def getLogsSD():
 
 @router.get('/getAllPokemons')
 def getAllPokemons(request: Request):
-    request.app.cur.execute(f'SELECT * FROM main."Statistiques" ORDER BY index')
+    request.app.cur.execute(f'SELECT * FROM public."Statistiques" ORDER BY index')
     resultset = request.app.cur.fetchall()
     return resultset
 
 
 @router.get('/getAllPokemonsData/{filtre}')
 def getAllPokemonsData(request: Request, filtre):
-    print(f'SELECT * FROM main."pokedex" WHERE "{filtre}"=true ORDER BY numero')
-    request.app.cur.execute(f'SELECT * FROM main."pokedex" WHERE "{filtre}"=true ORDER BY numero')
+    print(f'SELECT * FROM public."pokedex" WHERE "{filtre}"=true ORDER BY numero')
+    request.app.cur.execute(f'SELECT * FROM public."pokedex" WHERE "{filtre}"=true ORDER BY numero')
     resultset = request.app.cur.fetchall()
     return resultset
 
 @router.get('/addPoke/{num}/{filtre}')
 def addPoke(request: Request, num, filtre):
-    request.app.cur.execute(f"UPDATE main.pokedex SET \"{filtre}\"=true	WHERE numero={num}")
+    request.app.cur.execute(f"UPDATE public.pokedex SET \"{filtre}\"=true	WHERE numero={num}")
     request.app.conn.commit()
     return "OK"
 
 @router.get('/deletePoke/{num}/{filtre}')
 def deletePoke(request: Request, num, filtre):
-    request.app.cur.execute(f"UPDATE main.pokedex SET \"{filtre}\"=false WHERE numero={num}")
+    request.app.cur.execute(f"UPDATE public.pokedex SET \"{filtre}\"=false WHERE numero={num}")
     request.app.conn.commit()
     return "OK"
 
@@ -91,7 +92,7 @@ def deletePoke(request: Request, num, filtre):
 def update(request: Request):
     for i in range(1025):
         print(i)
-        request.app.cur.execute(f"INSERT INTO main.pokedex(numero, name, \"shinyPoGO\", game, \"shinyHome\", shadow, \"threeStars\", perfect, pure, mega, \"normalPoGO\", \"normalHome\") VALUES ("+str(i+1)+", '???', false, 'PokemonGO', false, false, false, false, false, false, true, true)")
+        request.app.cur.execute(f"INSERT INTO public.pokedex(numero, name, \"shinyPoGO\", game, \"shinyHome\", shadow, \"threeStars\", perfect, pure, mega, \"normalPoGO\", \"normalHome\") VALUES ("+str(i+1)+", '???', false, 'PokemonGO', false, false, false, false, false, false, true, true)")
     request.app.conn.commit()
     return "OK"
 
@@ -120,7 +121,7 @@ def update(request: Request):
             priority = res["priority"]
             category = res["damage_class"]["name"]
             typeAtt = res["type"]["name"]
-            request.app.cur.execute(f'INSERT INTO main."Move"(name, pp, priority, category, power, type, accuracy) VALUES (\'{name}\', {pp}, {priority}, \'{category}\', {power}, \'{typeAtt}\', {acc});')
+            request.app.cur.execute(f'INSERT INTO public."Move"(name, pp, priority, category, power, type, accuracy) VALUES (\'{name}\', {pp}, {priority}, \'{category}\', {power}, \'{typeAtt}\', {acc});')
             
         else:
             print(f"Erreur lors de la requête : statut {response.status_code}")
