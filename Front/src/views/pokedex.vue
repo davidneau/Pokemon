@@ -26,6 +26,7 @@
                         <option value="shiny">Shiny</option>
                         <option value="normal">Tous</option>
                         <option value="AM">AM</option>
+                        <option value="ZA">ZA</option>
                         <option value="inBox">inBox</option>
                         <option v-if="this.game == 'PoGO'" value="shadow">Obscurs</option>
                         <option v-if="this.game == 'PoGO'" value="pure">Purifiés</option>
@@ -162,10 +163,21 @@ export default ({
                         let div = card.children[0].children[0]
                         div.style["background-color"] = "chocolate"
                         let image = div.children[0]
-                        this.noPokemon += 1;
                         image.src = require(`../assets/images/${this.image_folder}/${element[0]}.png`)
                     });
-                })    
+                })
+                
+                await axios.get(this.urlBack + "getAllPokemonsData/ZA")
+                .then((response) =>{
+                    this.pokemonsData = response.data
+                    this.pokemonsData.forEach(element => {
+                        let card = document.getElementById(element[0])
+                        let div = card.children[0].children[0]
+                        div.style["background-color"] = "blue"
+                        let image = div.children[0]
+                        image.src = require(`../assets/images/${this.image_folder}/${element[0]}.png`)
+                    });
+                })
             }
             
             await axios.get(this.urlBack + "getAllPokemonsData/" + this.filtreFinal)

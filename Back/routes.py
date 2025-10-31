@@ -77,6 +77,8 @@ def customRequest(request: Request):
 
 @router.get('/getAllPokemonsData/{filtre}')
 def getAllPokemonsData(request: Request, filtre):
+    if filtre == "ZA":
+        filtre = "legendsZA"
     print(f'SELECT * FROM public."pokedex2" WHERE "{filtre}"=true ORDER BY numero')
     request.app.cur.execute(f'SELECT * FROM public."pokedex2" WHERE "{filtre}"=true ORDER BY numero')
     resultset = request.app.cur.fetchall()
@@ -84,12 +86,18 @@ def getAllPokemonsData(request: Request, filtre):
 
 @router.get('/addPoke/{num}/{filtre}')
 def addPoke(request: Request, num, filtre):
+    print(filtre)
+    if filtre == "ZA":
+        filtre = "legendsZA"
+    print(filtre)
     request.app.cur.execute(f"UPDATE public.pokedex2 SET \"{filtre}\"=true	WHERE numero={num}")
     request.app.conn.commit()
     return "OK"
 
 @router.get('/deletePoke/{num}/{filtre}')
 def deletePoke(request: Request, num, filtre):
+    if filtre == "ZA":
+        filtre = "legendsZA"
     request.app.cur.execute(f"UPDATE public.pokedex2 SET \"{filtre}\"=false WHERE numero={num}")
     request.app.conn.commit()
     return "OK"
