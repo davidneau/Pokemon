@@ -144,7 +144,7 @@ def update(request: Request):
     request.app.conn.commit()
     return "OK"
 
-@app.post("/message")
+@router.post("/message")
 def receive_message(data: Message):
     print("Message reçu :", data.message)
     return {"status": "ok"}
