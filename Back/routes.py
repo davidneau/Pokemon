@@ -144,11 +144,7 @@ def update(request: Request):
     request.app.conn.commit()
     return "OK"
 
-@router.post("/message")
-def receive_message():
-    data = request.get_json()
-    message = data.get("message")
-
-    print("Message reçu :", message)
-
-    return jsonify({"status": "ok"})
+@app.post("/message")
+def receive_message(data: Message):
+    print("Message reçu :", data.message)
+    return {"status": "ok"}
