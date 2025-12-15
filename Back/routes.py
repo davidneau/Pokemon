@@ -143,3 +143,12 @@ def update(request: Request):
         i+=1
     request.app.conn.commit()
     return "OK"
+
+@app.route("/message", methods=["POST"])
+def receive_message():
+    data = request.get_json()
+    message = data.get("message")
+
+    print("Message reçu :", message)
+
+    return jsonify({"status": "ok"})
