@@ -145,6 +145,10 @@ def update(request: Request):
     return "OK"
 
 @router.post("/message")
-def receive_message(data: Message):
-    print("Message reçu :", data.message)
+async def receive_message(request: Request):
+    data = await request.json()
+    message = data.get("message")
+
+    print("Message reçu :", message)
+
     return {"status": "ok"}
